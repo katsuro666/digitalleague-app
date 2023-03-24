@@ -1,2 +1,5 @@
 node_modules
+*.tsbuildinfo
+.idea
+dist
 DS_Store
