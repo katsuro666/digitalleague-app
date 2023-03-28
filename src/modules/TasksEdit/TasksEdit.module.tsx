@@ -52,7 +52,6 @@ export function TasksEdit() {
 
   return (
     <>
-      <h1>TODO LIST | EDIT TASK {taskId}</h1>
       <form>
         <TextField label="Task name" value={taskName} onChange={(e) => setTaskName(e.target.value)} />
         <TextField label="What to do (description)" value={taskDesc} onChange={(e) => setTaskDesc(e.target.value)} />
