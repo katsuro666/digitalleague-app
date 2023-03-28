@@ -25,6 +25,7 @@ export function SearchForm() {
     evt.preventDefault();
     setSearchValue('');
     setFilterType(FILTER_TYPES.ALL);
+    // eslint-disable-next-line no-console
     console.log('search:', filterType, searchValue);
   };
 
