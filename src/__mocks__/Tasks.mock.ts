@@ -36,6 +36,13 @@ export const TasksMock: TaskEntity[] = [
     isImportant: true,
     isDone: false,
   },
+  {
+    name: '',
+    id: '22',
+    info: '',
+    isImportant: false,
+    isDone: false,
+  },
 ];
 
 const importantTasksMock = TasksMock.filter((task) => task.isImportant === true);
