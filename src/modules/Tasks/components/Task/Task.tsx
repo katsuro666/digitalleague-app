@@ -4,8 +4,12 @@ import { TaskProps } from './Task.types';
 import './Task.css';
 import { EDIT, ROOT } from 'constants/index';
 
-export function Task({ task }: TaskProps) {
+export function Task({ task, changeTaskComplete, changeTaskImportance, deleteTask }: TaskProps) {
   const { name, info, isImportant, isDone, id } = task;
+
+  const onBtnTaskComplete = () => changeTaskComplete(id);
+  const onBtnTaskImportance = () => changeTaskImportance(id);
+  const onBtnTaskDelete = () => deleteTask(id);
 
   return (
     <div>
@@ -23,17 +27,22 @@ export function Task({ task }: TaskProps) {
             className={`task__btn btn ${
               isImportant ? 'btn-success' : 'btn-outline-success'
             } btn-sm float-right btn-important`}
-            disabled={isDone}>
+            disabled={isDone}
+            onClick={onBtnTaskImportance}>
             <i className="fa fa-exclamation" />
           </button>
 
           <button
             type="button"
-            className={`task__btn btn ${isDone ? 'btn-danger' : 'btn-outline-danger'} btn-sm float-right`}>
+            className={`task__btn btn ${isDone ? 'btn-danger' : 'btn-outline-danger'} btn-sm float-right`}
+            onClick={onBtnTaskComplete}>
             <i className="fa fa-check" />
           </button>
 
-          <button type="button" className="task__btn btn btn-outline-danger btn-sm float-right btn-delete">
+          <button
+            type="button"
+            className="task__btn btn btn-outline-danger btn-sm float-right btn-delete"
+            onClick={onBtnTaskDelete}>
             <i className="fa fa-trash-o" />
           </button>
 

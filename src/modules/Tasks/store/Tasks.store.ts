@@ -45,49 +45,60 @@ export class TasksStore {
     return this._isTasksLoading;
   }
 
-  async loadTasks(searchParams?: SearchTaskEntity) {
+  loadTasks = async (searchParams?: SearchTaskEntity) => {
     this._isTasksLoading = true;
-    console.log(searchParams);
+
+    // Имитация работы с бэком
+
+    console.log('reloading list', searchParams);
     this._tasks = TasksMock;
     this._tasksStats = TasksStatsMock;
     await delay(1000);
+
     this._isTasksLoading = false;
-  }
+  };
 
-  changeTaskImportance(taskId: TaskEntity['id']) {
+  changeTaskImportance = (taskId: TaskEntity['id']) => {
     this._isTasksLoading = true;
+
+    // Имитация работы с бэком
+
     const task = this._tasks.find((item) => item.id === taskId);
     if (task === undefined) {
       console.log(`Таск ${taskId} не найден`);
     } else {
-      task.isImportant = !task.isImportant;
-      console.log(`Импортанс таска ${taskId}изменён, теперь он ${task.isImportant}`);
+      console.log(`Импортанс таска ${taskId} изменён, теперь он ${!task.isImportant}`);
     }
     this.loadTasks();
-  }
+  };
 
-  changeTaskComplete(taskId: TaskEntity['id']) {
+  changeTaskComplete = (taskId: TaskEntity['id']) => {
     this._isTasksLoading = true;
+
+    // Имитация работы с бэком
+
     const task = this._tasks.find((item) => item.id === taskId);
     if (task === undefined) {
       console.log(`Таск ${taskId} не найден`);
     } else {
-      task.isDone = !task.isDone;
-      console.log(`Таск комплит таска ${taskId} изменён, теперь он ${task.isDone}`);
+      console.log(`Таск комплит таска ${taskId} изменён, теперь он ${!task.isDone}`);
     }
     this.loadTasks();
-  }
+  };
 
-  deleteTask(taskId: TaskEntity['id']) {
+  deleteTask = (taskId: TaskEntity['id']) => {
     this._isTasksLoading = true;
+
+    // Имитация работы с бэком
+
     const task = this._tasks.find((item) => item.id === taskId);
     if (task === undefined) {
       console.log(`Таск ${taskId} не найден`);
     } else {
-      console.log('Таск ${taskId} удалён');
+      console.log(`Таск ${taskId} удалён`);
     }
     this.loadTasks();
-  }
+  };
 }
 
 export const TasksStoreInstance = new TasksStore();
