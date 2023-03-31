@@ -50,7 +50,7 @@ export class TasksStore {
 
     // Имитация работы с бэком
 
-    console.log('reloading list', searchParams);
+    console.log('reloading tasks list', searchParams);
     this._tasks = TasksMock;
     this._tasksStats = TasksStatsMock;
     await delay(1000);

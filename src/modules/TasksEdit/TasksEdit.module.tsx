@@ -1,41 +1,25 @@
 /* eslint-disable no-console */
-import React, { useState, MouseEvent } from 'react';
+import React, { MouseEvent, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { observer } from 'mobx-react';
+import { TasksEditStoreInstance } from './store';
 import { TextField } from 'components/TextField';
 import { Checkbox } from 'components/Checkbox';
 import { PATH_LIST } from 'constants/index';
-import { TasksMock } from '__mocks__/index';
 
-export function TasksEdit() {
-  const navigate = useNavigate();
+function TasksEditProto() {
   const { taskId } = useParams();
-  const [taskName, setTaskName] = useState(findTask()?.name || '');
-  const [taskDesc, setTaskDesc] = useState(findTask()?.info || '');
-  // eslint-disable-next-line prefer-const
-  let [isImportant, setIsImportant] = useState(findTask()?.isImportant || false);
-  // eslint-disable-next-line prefer-const
-  let [isCompleted, setIsCompleted] = useState(findTask()?.isDone || false);
+  const navigate = useNavigate();
 
-  function findTask() {
-    return TasksMock.find((item) => item.id === taskId);
-  }
+  useEffect(() => {
+    TasksEditStoreInstance.loadTask(taskId);
+  }, []);
 
-  function setIsImportantState() {
-    if (isImportant === false) {
-      setIsImportant((isImportant = true));
-    } else {
-      setIsImportant((isImportant = false));
-    }
-  }
-  function setIsCompletedState() {
-    if (isCompleted === false) {
-      setIsCompleted((isCompleted = true));
-    } else {
-      setIsCompleted((isCompleted = false));
-    }
-  }
+  const { taskName, taskDesc, isImportant, isCompleted, setTaskName, setTaskDesc, setIsImportant, setIsCompleted } =
+    TasksEditStoreInstance;
 
   function editTask(e: MouseEvent<HTMLButtonElement>) {
+    /* TODO: Перенести в методы стора когда настроишь навигацию */
     e.preventDefault();
     if (taskName === '') {
       console.log('Задай название таску');
@@ -55,8 +39,8 @@ export function TasksEdit() {
       <form>
         <TextField label="Task name" value={taskName} onChange={(e) => setTaskName(e.target.value)} />
         <TextField label="What to do (description)" value={taskDesc} onChange={(e) => setTaskDesc(e.target.value)} />
-        <Checkbox label="Important" disabled={isCompleted} checked={isImportant} onChange={setIsImportantState} />
-        <Checkbox label="Completed" checked={isCompleted} onChange={setIsCompletedState} />
+        <Checkbox label="Important" disabled={isCompleted} checked={isImportant} onChange={setIsImportant} />
+        <Checkbox label="Completed" checked={isCompleted} onChange={setIsCompleted} />
         <button type="submit" className="btn btn-secondary d-block w-100" onClick={editTask}>
           Edit task
         </button>
@@ -64,3 +48,5 @@ export function TasksEdit() {
     </>
   );
 }
+
+export const TasksEdit = observer(TasksEditProto);

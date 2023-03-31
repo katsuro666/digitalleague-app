@@ -1,34 +1,36 @@
 /* eslint-disable no-console */
-import React, { useState, MouseEvent } from 'react';
+import React, { MouseEvent, useEffect } from 'react';
+import { observer } from 'mobx-react';
 import { useNavigate } from 'react-router-dom';
+import { TasksAddStoreInstance } from './store';
 import { TextField, Checkbox } from 'components/index';
 import { PATH_LIST } from 'constants/index';
+import { delay } from 'helpers/index';
 
-export function TasksAdd() {
+function TasksAddProto() {
+  useEffect(() => {
+    TasksAddStoreInstance.newTaskPreload();
+  }, []);
+
   const navigate = useNavigate();
-  const [taskName, setTaskName] = useState('');
-  const [taskDesc, setTaskDesc] = useState('');
-  // eslint-disable-next-line prefer-const
-  let [isImportant, setIsImportant] = useState(false);
 
-  function addNewTask(e: MouseEvent<HTMLButtonElement>) {
+  const { taskName, taskDesc, taskIsImportant, setTaskName, setTaskDesc, setTaskImportance } = TasksAddStoreInstance;
+
+  async function addNewTask(e: MouseEvent<HTMLButtonElement>) {
+    /* TODO: определить способ реализации роутинга и переместить этот метод в стор */
+
     e.preventDefault();
+
     if (taskName === '') {
       console.log('У тебя нет названия таски');
     }
     if (taskDesc === '') {
       console.log('У тебя нет описания таски');
     } else {
-      console.log(`Вот вам новый таск:\nНазвание: ${taskName}\nОписание: ${taskDesc}\nВажно: ${isImportant}`);
-      navigate(PATH_LIST.ROOT);
-    }
-  }
+      console.log(`Вот вам новый таск:\nНазвание: ${taskName}\nОписание: ${taskDesc}\nВажно: ${taskIsImportant}`);
 
-  function setCheckboxValue() {
-    if (isImportant === false) {
-      setIsImportant((isImportant = true));
-    } else {
-      setIsImportant((isImportant = false));
+      await delay(500);
+      navigate(PATH_LIST.ROOT);
     }
   }
 
@@ -46,10 +48,12 @@ export function TasksAdd() {
         value={taskDesc}
         onChange={(e) => setTaskDesc(e.target.value)}
       />
-      <Checkbox label="Important" onChange={setCheckboxValue} />
+      <Checkbox label="Important" onChange={setTaskImportance} />
       <button type="submit" className="btn btn-secondary d-block w-100" onClick={addNewTask}>
         Add task
       </button>
     </form>
   );
 }
+
+export const TasksAdd = observer(TasksAddProto);
