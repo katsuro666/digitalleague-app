@@ -1,50 +1,62 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { MouseEvent } from 'react';
 import { observer } from 'mobx-react';
+import { Controller, useForm } from 'react-hook-form';
+import { DEFAULT_VALUES } from './SearchForm.utils';
 import { StatusFilter } from 'modules/Tasks/components/StatusFilter';
 import { SearchInput } from 'components/index';
-import { FILTER_TYPES } from 'constants/index';
 import { FiltersType } from 'domains/index';
 import './SearchForm.css';
 import { TasksStoreInstance } from 'modules/Tasks/store';
 
 function SearchFormProto() {
   const { isTasksLoading, loadTasks } = TasksStoreInstance;
-  const [filterType, setFilterType] = useState<FiltersType>(FILTER_TYPES.ALL);
-  const [searchValue, setSearchValue] = useState('');
+  const { control, reset, handleSubmit, setValue } = useForm({
+    defaultValues: DEFAULT_VALUES,
+  });
 
   const onSearchInputChange = (value: string) => {
-    setSearchValue(value);
-  };
-
-  const onFilterChange = (type: FiltersType) => {
-    setFilterType(type);
+    setValue('searchName', value);
   };
 
   const onSearchInputReset = () => {
-    setSearchValue('');
+    setValue('searchName', '');
+  };
+  const onFilterChange = (type: FiltersType) => {
+    setValue('filter', type);
   };
 
   const onSubmit = async (evt: MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
-    setSearchValue('');
-    setFilterType(FILTER_TYPES.ALL);
-    await loadTasks({
-      searchName: searchValue,
-      filter: filterType,
-    });
-    // eslint-disable-next-line no-console
-    console.log('search:', filterType, searchValue);
+    handleSubmit(async (data) => {
+      await loadTasks(data);
+      reset();
+    })();
   };
 
   return (
     <form className="search-form d-flex justify-content-between">
-      <SearchInput
-        value={searchValue}
-        onChange={onSearchInputChange}
-        onReset={onSearchInputReset}
-        disabled={isTasksLoading}
+      <Controller
+        control={control}
+        name="searchName"
+        render={({ field }) => {
+          return (
+            <SearchInput
+              value={field.value}
+              onChange={onSearchInputChange}
+              onReset={onSearchInputReset}
+              disabled={isTasksLoading}
+            />
+          );
+        }}
       />
-      <StatusFilter tasksType={filterType} onChange={onFilterChange} disabled={isTasksLoading} />
+      <Controller
+        control={control}
+        name="filter"
+        render={({ field }) => {
+          return <StatusFilter tasksType={field.value} onChange={onFilterChange} disabled={isTasksLoading} />;
+        }}
+      />
+
       <button type="submit" className="btn btn-primary" onClick={onSubmit} disabled={isTasksLoading}>
         Find
       </button>
