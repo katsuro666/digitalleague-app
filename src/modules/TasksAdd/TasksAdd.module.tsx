@@ -1,55 +1,96 @@
 /* eslint-disable no-console */
-import React, { MouseEvent, useEffect } from 'react';
+import React, { ChangeEvent, MouseEvent } from 'react';
 import { observer } from 'mobx-react';
 import { useNavigate } from 'react-router-dom';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { TasksAddStoreInstance } from './store';
+import { DEFAULT_VALUES } from './TasksAdd.utils';
+import { validationScheme } from './TasksAdd.validation';
 import { TextField, Checkbox } from 'components/index';
 import { PATH_LIST } from 'constants/index';
-import { delay } from 'helpers/index';
+import { TasksAddEntity } from 'domains/index';
 
 function TasksAddProto() {
-  useEffect(() => {
-    TasksAddStoreInstance.newTaskPreload();
-  }, []);
-
   const navigate = useNavigate();
 
-  const { taskName, taskDesc, taskIsImportant, setTaskName, setTaskDesc, setTaskImportance } = TasksAddStoreInstance;
+  const { addNewTask } = TasksAddStoreInstance;
 
-  async function addNewTask(e: MouseEvent<HTMLButtonElement>) {
-    /* TODO: определить способ реализации роутинга и переместить этот метод в стор */
+  const { control, handleSubmit, reset, setValue } = useForm<TasksAddEntity>({
+    defaultValues: DEFAULT_VALUES,
+    resolver: yupResolver(validationScheme),
+  });
 
+  const setTaskImportance = (e: ChangeEvent<HTMLInputElement>) => {
+    setValue('isImportant', e.target.checked);
+  };
+
+  const setTaskName = (e: ChangeEvent<HTMLInputElement>) => {
+    setValue('name', e.target.value);
+  };
+  const setTaskDesc = (e: ChangeEvent<HTMLInputElement>) => {
+    setValue('description', e.target.value);
+  };
+
+  const onSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
-    if (taskName === '') {
-      console.log('У тебя нет названия таски');
-    }
-    if (taskDesc === '') {
-      console.log('У тебя нет описания таски');
-    } else {
-      console.log(`Вот вам новый таск:\nНазвание: ${taskName}\nОписание: ${taskDesc}\nВажно: ${taskIsImportant}`);
-
-      await delay(500);
-      navigate(PATH_LIST.ROOT);
-    }
-  }
+    handleSubmit(async (data) => {
+      const isSuccess = await addNewTask(data);
+      if (isSuccess) {
+        console.log('Таск добавлен успешно');
+        reset();
+        navigate(PATH_LIST.ROOT);
+      } else {
+        console.log('Произошла ошибка при добавлении таска');
+      }
+    })();
+  };
 
   return (
     <form>
-      <TextField
-        label="Task name"
-        placeholder="Clean room"
-        value={taskName}
-        onChange={(e) => setTaskName(e.target.value)}
+      <Controller
+        control={control}
+        name="name"
+        render={({ field, fieldState: { error } }) => {
+          return (
+            <TextField
+              inputType="text"
+              label="Task name"
+              placeholder="Clean room"
+              value={field.value}
+              onChange={setTaskName}
+              errorText={error?.message}
+            />
+          );
+        }}
       />
-      <TextField
-        label="What to do (description)"
-        placeholder="Clean my room"
-        value={taskDesc}
-        onChange={(e) => setTaskDesc(e.target.value)}
+
+      <Controller
+        control={control}
+        name="description"
+        render={({ field, fieldState: { error } }) => {
+          return (
+            <TextField
+              inputType="text"
+              label="What to do (description)"
+              placeholder="Clean my room"
+              value={field.value}
+              onChange={setTaskDesc}
+              errorText={error?.message}
+            />
+          );
+        }}
       />
-      <Checkbox label="Important" onChange={setTaskImportance} />
-      <button type="submit" className="btn btn-secondary d-block w-100" onClick={addNewTask}>
+
+      <Controller
+        control={control}
+        name="isImportant"
+        render={() => {
+          return <Checkbox label="Important" onChange={setTaskImportance} />;
+        }}
+      />
+
+      <button type="submit" className="btn btn-secondary d-block w-100" onClick={onSubmit}>
         Add task
       </button>
     </form>

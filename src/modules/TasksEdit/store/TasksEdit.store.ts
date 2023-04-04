@@ -4,7 +4,7 @@ import { TaskEntity } from 'domains/index';
 import { TasksMock } from '__mocks__/index';
 import { delay } from 'helpers/index';
 
-type PrivateFields = '_taskName' | '_taskDesc' | '_isImportant' | '_isCompleted';
+type PrivateFields = '_taskName' | '_taskDesc' | '_isImportant' | '_isCompleted' | '_isLoading';
 
 export class TasksEditStore {
   constructor() {
@@ -13,11 +13,13 @@ export class TasksEditStore {
       _taskDesc: observable,
       _isImportant: observable,
       _isCompleted: observable,
+      _isLoading: observable,
 
       taskName: computed,
       taskDesc: computed,
       isImportant: computed,
       isCompleted: computed,
+      isLoading: computed,
 
       setTaskName: action,
       setTaskDesc: action,
@@ -31,6 +33,7 @@ export class TasksEditStore {
   private _taskDesc = '';
   private _isImportant = false;
   private _isCompleted = false;
+  private _isLoading = false;
 
   get taskName() {
     return this._taskName;
@@ -52,6 +55,10 @@ export class TasksEditStore {
     return this._isCompleted;
   }
 
+  get isLoading() {
+    return this._isLoading;
+  }
+
   setTaskName = (value: string) => {
     this._taskName = value;
   };
@@ -61,11 +68,7 @@ export class TasksEditStore {
   };
 
   setIsImportant = () => {
-    if (this._isImportant === false) {
-      this._isImportant = true;
-    } else {
-      this._isImportant = false;
-    }
+    this._isImportant = !this.isImportant;
     console.log(`Ипортанс изменен на ${this._isImportant}`);
   };
 
@@ -80,16 +83,19 @@ export class TasksEditStore {
   };
 
   loadTask = async (taskId: string | undefined) => {
+    this._isLoading = true;
+
     if (taskId === undefined) {
       console.log(`task ${taskId} не найден`);
     } else {
       console.log(`Загружаю таск ${taskId}`);
       const task = TasksMock.find((item) => item.id === taskId) as TaskEntity;
+      await delay(1000);
+      this._isLoading = false;
       this._taskName = task.name;
       this._taskDesc = task.info;
       this._isImportant = task.isImportant;
       this._isCompleted = task.isDone;
-      await delay(1000);
       console.log(`Таск ${taskId} загружен.`);
     }
   };
