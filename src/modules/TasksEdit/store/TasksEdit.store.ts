@@ -18,6 +18,8 @@ export class TasksEditStore {
 
       loadTask: action,
       editTask: action,
+      setIsLoading: action,
+      setTaskId: action,
     });
 
     reaction(
@@ -40,15 +42,23 @@ export class TasksEditStore {
     return this._task;
   }
 
+  setIsLoading = (status: boolean) => {
+    this._isLoading = status;
+  };
+
+  setTaskId = (id: string | undefined) => {
+    this.taskId = id;
+  };
+
   loadTask = async (taskId: string | undefined) => {
-    this._isLoading = true;
+    this.setIsLoading(true);
 
     console.log(`Загружаю таск ${taskId}`);
     this._task = TasksMock.find((item) => item.id === taskId) as TaskEntity;
     await delay(1000);
     console.log(`Таск ${taskId} загружен.`);
 
-    this._isLoading = false;
+    this.setIsLoading(false);
   };
 
   editTask = async (task: TasksEditEntity) => {

@@ -18,7 +18,7 @@ function TasksEditProto() {
 
   const navigate = useNavigate();
 
-  const { isLoading, task, editTask } = TasksEditStoreInstance;
+  const { isLoading, task, editTask, setTaskId } = TasksEditStoreInstance;
 
   const { control, reset, handleSubmit, setValue, getValues, watch } = useForm<TasksEditEntity>({
     defaultValues: DEFAULT_VALUES,
@@ -28,8 +28,7 @@ function TasksEditProto() {
   const isDisabledIsImportant = watch('isDone');
 
   useEffect(() => {
-    TasksEditStoreInstance.taskId = taskId;
-    // loadTask(taskId);
+    setTaskId(taskId);
   }, [TasksEditStoreInstance, taskId]);
 
   useEffect(() => {

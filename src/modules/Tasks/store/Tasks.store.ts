@@ -20,6 +20,7 @@ export class TasksStore {
       changeTaskImportance: action,
       changeTaskComplete: action,
       deleteTask: action,
+      setTasksLoading: action,
     });
   }
 
@@ -45,8 +46,12 @@ export class TasksStore {
     return this._isTasksLoading;
   }
 
+  setTasksLoading = (status: boolean) => {
+    this._isTasksLoading = status;
+  };
+
   loadTasks = async (searchParams?: SearchTaskEntity) => {
-    this._isTasksLoading = true;
+    this.setTasksLoading(true);
 
     // Имитация работы с бэком
 
@@ -55,12 +60,11 @@ export class TasksStore {
     this._tasksStats = TasksStatsMock;
     await delay(1000);
 
-    this._isTasksLoading = false;
+    this.setTasksLoading(false);
   };
 
   changeTaskImportance = (taskId: TaskEntity['id']) => {
-    this._isTasksLoading = true;
-
+    this.setTasksLoading(true);
     // Имитация работы с бэком
 
     const task = this._tasks.find((item) => item.id === taskId);
@@ -73,7 +77,7 @@ export class TasksStore {
   };
 
   changeTaskComplete = (taskId: TaskEntity['id']) => {
-    this._isTasksLoading = true;
+    this.setTasksLoading(true);
 
     // Имитация работы с бэком
 
@@ -87,7 +91,7 @@ export class TasksStore {
   };
 
   deleteTask = (taskId: TaskEntity['id']) => {
-    this._isTasksLoading = true;
+    this.setTasksLoading(true);
 
     // Имитация работы с бэком
 
