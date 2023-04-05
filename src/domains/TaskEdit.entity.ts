@@ -1,6 +1,6 @@
 export interface TasksEditEntity {
   name: string;
-  description: string;
+  info: string;
   isImportant: boolean;
-  isCompleted: boolean;
+  isDone: boolean;
 }
