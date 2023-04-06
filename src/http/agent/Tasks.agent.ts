@@ -13,14 +13,14 @@ export class TasksAgent extends BasicAgent {
   }
 
   async getAllTasks(params?: GetAllTasksQuery): Promise<GetAllTasksResponse> {
-    const { data } = await this._http.get('/tasks', {
+    const { data } = await this._http.get<GetAllTasksResponse>('/tasks', {
       params,
     });
     return data;
   }
 
   async updateTask(taskId: string, newTaskBody: UpdateTaskRequest): Promise<UpdateTaskResponse> {
-    const { data } = await this._http.patch(`/tasks/${taskId}`, newTaskBody);
+    const { data } = await this._http.patch<UpdateTaskResponse>(`/tasks/${taskId}`, newTaskBody);
     return data;
   }
 

@@ -9,8 +9,8 @@ import './SearchForm.css';
 import { TasksStoreInstance } from 'modules/Tasks/store';
 
 function SearchFormProto() {
-  const { isTasksLoading, loadTasks } = TasksStoreInstance;
-  const { control, reset, handleSubmit, setValue } = useForm({
+  const { isTasksLoading, updateTasks } = TasksStoreInstance;
+  const { control, handleSubmit, setValue } = useForm({
     defaultValues: DEFAULT_VALUES,
   });
 
@@ -28,8 +28,7 @@ function SearchFormProto() {
   const onSubmit = async (evt: MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
     handleSubmit(async (data) => {
-      await loadTasks(data);
-      reset();
+      await updateTasks(data);
     })();
   };
 

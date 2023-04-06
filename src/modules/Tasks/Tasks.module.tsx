@@ -5,7 +5,7 @@ import { TasksStats, TasksList, SearchForm } from 'modules/Tasks/components';
 
 function TasksProto() {
   useEffect(() => {
-    TasksStoreInstance.loadTasks();
+    TasksStoreInstance.updateTasks();
   }, []);
 
   return (

@@ -7,8 +7,8 @@ import { EDIT, ROOT } from 'constants/index';
 export function Task({ task, changeTaskComplete, changeTaskImportance, deleteTask }: TaskProps) {
   const { name, info, isImportant, isDone, id } = task;
 
-  const onBtnTaskComplete = () => changeTaskComplete(id);
-  const onBtnTaskImportance = () => changeTaskImportance(id);
+  const onBtnTaskComplete = () => changeTaskComplete(id, isDone);
+  const onBtnTaskImportance = () => changeTaskImportance(id, isImportant);
   const onBtnTaskDelete = () => deleteTask(id);
 
   return (
@@ -46,7 +46,6 @@ export function Task({ task, changeTaskComplete, changeTaskImportance, deleteTas
             <i className="fa fa-trash-o" />
           </button>
 
-          {/* TODO: Исправить ссылку, когда будет страница редактирования */}
           <Link className="task__btn btn btn-outline-secondary btn-sm float-right" to={`${ROOT}${EDIT}/${id}`}>
             <i className="fa fa-pencil" />
           </Link>
