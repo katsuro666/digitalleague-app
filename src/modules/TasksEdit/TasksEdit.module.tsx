@@ -61,11 +61,10 @@ function TasksEditProto() {
     handleSubmit(async (data) => {
       const isSuccess = await editTask(data);
       if (isSuccess) {
-        console.log('Таск отредактирован');
         reset();
         navigate(PATH_LIST.ROOT);
       } else {
-        console.log('При редактировании таска произошла ошибка');
+        console.log('Нотификация ошибки при редактировании');
       }
     })();
   }

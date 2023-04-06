@@ -1,10 +1,4 @@
-import {
-  GetAllTasksQuery,
-  GetAllTasksResponse,
-  // GetTaskResponse,
-  UpdateTaskRequest,
-  UpdateTaskResponse,
-} from '../index';
+import { GetAllTasksQuery, GetAllTasksResponse, UpdateTaskRequest, UpdateTaskResponse } from '../index';
 import { BasicAgent } from './Basic.agent';
 
 export class TasksAgent extends BasicAgent {

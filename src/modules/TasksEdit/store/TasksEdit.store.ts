@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import { action, computed, makeObservable, observable, reaction } from 'mobx';
 import { TaskEntity, TasksEditEntity } from 'domains/index';
-import { TasksMock } from '__mocks__/index';
-import { delay } from 'helpers/index';
+import { TasksEditAgentInstance } from 'http/agent/index';
+import { mapToInternalTask, taskEditToExternal } from 'helpers/mappers';
+import { UpdateTaskResponse } from 'http/index';
 
 type PrivateFields = '_isLoading' | '_task';
 
@@ -20,6 +21,7 @@ export class TasksEditStore {
       editTask: action,
       setIsLoading: action,
       setTaskId: action,
+      setTask: action,
     });
 
     reaction(
@@ -50,21 +52,37 @@ export class TasksEditStore {
     this.taskId = id;
   };
 
-  loadTask = async (taskId: string | undefined) => {
-    this.setIsLoading(true);
-
-    console.log(`Загружаю таск ${taskId}`);
-    this._task = TasksMock.find((item) => item.id === taskId) as TaskEntity;
-    await delay(1000);
-    console.log(`Таск ${taskId} загружен.`);
-
-    this.setIsLoading(false);
+  setTask = (task: TaskEntity | undefined) => {
+    this._task = task;
   };
 
-  editTask = async (task: TasksEditEntity) => {
-    await delay(1000);
-    console.log(task);
-    return true;
+  loadTask = async (taskId: TaskEntity['id'] | undefined) => {
+    this.setIsLoading(true);
+
+    try {
+      const res = await TasksEditAgentInstance.getTask(taskId as string);
+      const mappedRes = mapToInternalTask(res);
+      this.setTask(mappedRes);
+    } catch (error) {
+      this.setTask(undefined);
+      console.error(error);
+    } finally {
+      this.setIsLoading(false);
+    }
+  };
+
+  editTask = async (task: TasksEditEntity): Promise<UpdateTaskResponse | void> => {
+    this.setIsLoading(true);
+
+    try {
+      const externalTask = taskEditToExternal(task);
+      const res = await TasksEditAgentInstance.updateTask(this.taskId as string, externalTask);
+      return res;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.setIsLoading(false);
+    }
   };
 }
 

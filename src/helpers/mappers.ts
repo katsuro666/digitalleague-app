@@ -1,6 +1,6 @@
 import { FILTER_TYPES } from 'constants/statusFilterTypes';
-import { SearchTaskEntity, TaskEntity, TasksAddEntity, TasksStatsEntity } from 'domains/index';
-import { GetAllTasksQuery, GetAllTasksResponse } from 'http/index';
+import { SearchTaskEntity, TaskEntity, TasksAddEntity, TasksEditEntity, TasksStatsEntity } from 'domains/index';
+import { GetAllTasksQuery, GetAllTasksResponse, GetTaskResponse, UpdateTaskRequest } from 'http/index';
 import { CreateTaskRequest } from 'http/model/tasksAdd.model';
 
 export const mapToExternalParams = (params?: SearchTaskEntity): GetAllTasksQuery | undefined => {
@@ -38,13 +38,41 @@ export const mapToInternalTasks = (tasks: GetAllTasksResponse): TaskEntity[] => 
   return internalTasks;
 };
 
-export const mapToExternalTask = (task: TasksAddEntity): CreateTaskRequest => {
+export const mapTaskAddToExternal = (task: TasksAddEntity): CreateTaskRequest => {
   return {
     isImportant: task.isImportant,
     name: task.name,
     info: task.description,
   };
 };
+
+export const mapToInternalTask = (task: GetTaskResponse): TaskEntity => {
+  return {
+    name: task.name || 'Название не задано',
+    info: task.info || 'Описание не задано',
+    isImportant: task.isImportant || false,
+    isDone: task.isCompleted || false,
+    id: String(task.id),
+  };
+};
+
+export const taskEditToExternal = (task: TasksEditEntity): UpdateTaskRequest => {
+  return {
+    isImportant: task.isImportant,
+    name: task.name,
+    info: task.info,
+    isCompleted: task.isDone,
+  };
+};
+
+// export const mapTaskToTaskEdit = (task: TaskEntity): TasksEditEntity => {
+//   return {
+//     name: task.name,
+//     info: task.info,
+//     isImportant: task.isImportant,
+//     isDone: task.isDone,
+//   };
+// };
 
 export const getInternalInfo = (tasks: GetAllTasksResponse): TasksStatsEntity => {
   const total = tasks.length;
