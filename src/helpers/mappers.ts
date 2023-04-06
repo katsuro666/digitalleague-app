@@ -1,6 +1,7 @@
 import { FILTER_TYPES } from 'constants/statusFilterTypes';
-import { SearchTaskEntity, TaskEntity, TasksStatsEntity } from 'domains/index';
+import { SearchTaskEntity, TaskEntity, TasksAddEntity, TasksStatsEntity } from 'domains/index';
 import { GetAllTasksQuery, GetAllTasksResponse } from 'http/index';
+import { CreateTaskRequest } from 'http/model/tasksAdd.model';
 
 export const mapToExternalParams = (params?: SearchTaskEntity): GetAllTasksQuery | undefined => {
   if (!params) return undefined;
@@ -35,6 +36,14 @@ export const mapToInternalTasks = (tasks: GetAllTasksResponse): TaskEntity[] => 
     });
   });
   return internalTasks;
+};
+
+export const mapToExternalTask = (task: TasksAddEntity): CreateTaskRequest => {
+  return {
+    isImportant: task.isImportant,
+    name: task.name,
+    info: task.description,
+  };
 };
 
 export const getInternalInfo = (tasks: GetAllTasksResponse): TasksStatsEntity => {

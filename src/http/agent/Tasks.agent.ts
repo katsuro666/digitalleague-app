@@ -27,11 +27,6 @@ export class TasksAgent extends BasicAgent {
   async deleteTask(taskId: string): Promise<void> {
     await this._http.delete(`/tasks/${taskId}`);
   }
-
-  // async getTask(taskId: string): Promise<GetTaskResponse> {
-  //   const { data } = await this._http.get(`/tasks/${taskId}`);
-  //   return data;
-  // }
 }
 
 export const TaskAgentInstance = new TasksAgent();

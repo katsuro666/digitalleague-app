@@ -37,11 +37,10 @@ function TasksAddProto() {
     handleSubmit(async (data) => {
       const isSuccess = await addNewTask(data);
       if (isSuccess) {
-        console.log('Таск добавлен успешно');
         reset();
         navigate(PATH_LIST.ROOT);
       } else {
-        console.log('Произошла ошибка при добавлении таска');
+        console.log('Здесь должна быть нотификация о неудачном запросе');
       }
     })();
   };
