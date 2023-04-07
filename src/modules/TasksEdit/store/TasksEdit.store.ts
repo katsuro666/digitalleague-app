@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { action, computed, makeObservable, observable, reaction } from 'mobx';
+import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { TaskEntity, TasksEditEntity } from 'domains/index';
 import { TasksEditAgentInstance } from 'http/agent/index';
 import { mapToInternalTask, taskEditToExternal } from 'helpers/mappers';
@@ -19,9 +19,7 @@ export class TasksEditStore {
 
       loadTask: action,
       editTask: action,
-      setIsLoading: action,
       setTaskId: action,
-      setTask: action,
     });
 
     reaction(
@@ -44,35 +42,37 @@ export class TasksEditStore {
     return this._task;
   }
 
-  setIsLoading = (status: boolean) => {
-    this._isLoading = status;
-  };
-
   setTaskId = (id: string | undefined) => {
     this.taskId = id;
   };
 
-  setTask = (task: TaskEntity | undefined) => {
-    this._task = task;
-  };
-
   loadTask = async (taskId: TaskEntity['id'] | undefined) => {
-    this.setIsLoading(true);
+    runInAction(() => {
+      this._isLoading = true;
+    });
 
     try {
       const res = await TasksEditAgentInstance.getTask(taskId as string);
       const mappedRes = mapToInternalTask(res);
-      this.setTask(mappedRes);
+      runInAction(() => {
+        this._task = mappedRes;
+      });
     } catch (error) {
-      this.setTask(undefined);
+      runInAction(() => {
+        this._task = undefined;
+      });
       console.error(error);
     } finally {
-      this.setIsLoading(false);
+      runInAction(() => {
+        this._isLoading = false;
+      });
     }
   };
 
   editTask = async (task: TasksEditEntity): Promise<UpdateTaskResponse | void> => {
-    this.setIsLoading(true);
+    runInAction(() => {
+      this._isLoading = true;
+    });
 
     try {
       const externalTask = taskEditToExternal(task);
@@ -81,7 +81,9 @@ export class TasksEditStore {
     } catch (error) {
       console.error(error);
     } finally {
-      this.setIsLoading(false);
+      runInAction(() => {
+        this._isLoading = false;
+      });
     }
   };
 }

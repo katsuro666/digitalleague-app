@@ -7,10 +7,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { TasksEditStoreInstance } from './store';
 import { DEFAULT_VALUES } from './TasksEdit.utils';
 import { validationScheme } from './TasksEdit.validation';
-import { TextField } from 'components/TextField';
-import { Checkbox } from 'components/Checkbox';
 import { PATH_LIST } from 'constants/index';
-import { Loader } from 'components/index';
+import { Loader, Checkbox, TextField } from 'components/index';
 import { TasksEditEntity } from 'domains/index';
 
 function TasksEditProto() {
