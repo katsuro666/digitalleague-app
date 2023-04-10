@@ -1,37 +1,43 @@
 import React from 'react';
 import { observer } from 'mobx-react';
+import { Box, Typography } from '@mui/material';
+import { StatsBadge, StatsText, StatsWrapper } from './TasksStats.styles';
 import { Loader } from 'components/index';
 import { TasksStoreInstance } from 'modules/Tasks/store';
 
 function TasksStatsProto() {
   const { isTasksLoading, tasksStats } = TasksStoreInstance;
   return (
-    <div className="d-flex w-100 justify-content-between">
+    <Box display="flex" justifyContent="space-between" width="100%">
       {tasksStats ? (
         <>
-          <p>
-            Total:
+          <StatsWrapper>
+            <StatsText variant="body1">Total:</StatsText>
             <Loader isLoading={isTasksLoading} variant="dot">
-              <span className="badge bg-secondary">{tasksStats.total}</span>
+              <StatsBadge variant="body2">{tasksStats.total}</StatsBadge>
             </Loader>
-          </p>
-          <p>
-            Important:
+          </StatsWrapper>
+
+          <StatsWrapper>
+            <StatsText variant="body1">Important:</StatsText>
             <Loader isLoading={isTasksLoading} variant="dot">
-              <span className="badge bg-secondary">{tasksStats.important}</span>
+              <StatsBadge variant="body2">{tasksStats.important}</StatsBadge>
             </Loader>
-          </p>
-          <p>
-            Done:
+          </StatsWrapper>
+
+          <StatsWrapper>
+            <StatsText variant="body1">Done:</StatsText>
             <Loader isLoading={isTasksLoading} variant="dot">
-              <span className="badge bg-secondary">{tasksStats.done}</span>
+              <StatsBadge variant="body2">{tasksStats.done}</StatsBadge>
             </Loader>
-          </p>
+          </StatsWrapper>
         </>
       ) : (
-        <p className="d-flex justify-content-center w-100">Статистика недоступна</p>
+        <Typography display="flex" justifyContent="center">
+          Статистика недоступна
+        </Typography>
       )}
-    </div>
+    </Box>
   );
 }
 
