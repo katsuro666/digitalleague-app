@@ -1,6 +1,8 @@
 import React from 'react';
 import { observer } from 'mobx-react';
+import { Box, Typography, List } from '@mui/material';
 import { Task } from '../Task';
+import { StyledListItem } from './TasksList.styles';
 import { TasksStoreInstance } from 'modules/Tasks/store';
 import { Loader } from 'components/Loader';
 import './TasksList.css';
@@ -9,12 +11,12 @@ function TasksListProto() {
   const { tasks, isTasksLoading, changeTaskImportance, changeTaskComplete, deleteTask } = TasksStoreInstance;
 
   return (
-    <div className="tasks-wrapper d-flex align-items-center justify-content-center">
+    <Box display="flex" alignItems="center" justifyContent="center">
       <Loader isLoading={isTasksLoading}>
         {tasks?.length ? (
-          <ul className="list-group todo-list mb-3">
+          <List>
             {tasks.map((task) => (
-              <li key={task.id} className="list-group-item">
+              <StyledListItem key={task.id}>
                 <Task
                   key={task.id}
                   task={task}
@@ -22,14 +24,16 @@ function TasksListProto() {
                   deleteTask={deleteTask}
                   changeTaskComplete={changeTaskComplete}
                 />
-              </li>
+              </StyledListItem>
             ))}
-          </ul>
+          </List>
         ) : (
-          <p className="text-center">Задач пока нет</p>
+          <Typography display="flex" justifyContent="center" color="primary">
+            Задач пока нет
+          </Typography>
         )}
       </Loader>
-    </div>
+    </Box>
   );
 }
 

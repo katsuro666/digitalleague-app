@@ -13,7 +13,7 @@ export const StatsBadge = styled(Typography)({
 });
 
 export const StatsText = styled(Typography)({
-  color: 'rgb(72, 202, 228)',
+  color: 'rgb(119, 122, 146)',
   border: '1px solid rgb(37, 39, 60)',
   padding: '0.35em 0.65em',
   borderRadius: '.25rem',

@@ -6,7 +6,7 @@ import { Router } from 'router/index';
 
 export function App() {
   return (
-    <StyledContainer>
+    <StyledContainer maxWidth={false}>
       <CssBaseline />
       <BrowserRouter>
         <Router />
