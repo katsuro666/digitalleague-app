@@ -1,21 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Typography } from '@mui/material';
-import { StyledContainer } from './TasksPage.styles';
+import { StyledContainer, StyledTypography } from './TasksPage.styles';
 import { Tasks } from 'modules/index';
 import { PATH_LIST } from 'constants/index';
+import { TaskButton } from 'components/mui/index';
 
 export function TasksPage() {
   return (
     <StyledContainer maxWidth="sm">
-      <Typography variant="h3" component="h1" letterSpacing="10px">
-        TODO
-      </Typography>
+      <StyledTypography variant="h3">TODO</StyledTypography>
       <Tasks />
       <Link className="btn btn-secondary d-block ml-auto" to={PATH_LIST.ADD}>
-        <Button variant="contained" color="primary" fullWidth={true}>
-          Add task
-        </Button>
+        <TaskButton variant="outlined">Add task</TaskButton>
       </Link>
     </StyledContainer>
   );
