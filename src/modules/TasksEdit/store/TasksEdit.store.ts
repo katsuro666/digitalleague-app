@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { action, computed, makeObservable, observable, reaction } from 'mobx';
+import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { TaskEntity, TasksEditEntity } from 'domains/index';
 import { TasksEditAgentInstance } from 'http/agent/index';
 import { mapToInternalTask, taskEditToExternal } from 'helpers/mappers';
@@ -82,6 +82,14 @@ export class TasksEditStore {
 
   loadTask = async (taskId: TaskEntity['id'] | undefined) => {
     this.isLoading = true;
+  setTaskId = (id: string | undefined) => {
+    this.taskId = id;
+  };
+
+  loadTask = async (taskId: TaskEntity['id'] | undefined) => {
+    runInAction(() => {
+      this._isLoading = true;
+    });
 
     try {
       const res = await TasksEditAgentInstance.getTask(taskId as string);
@@ -97,6 +105,7 @@ export class TasksEditStore {
 
   editTask = async (task: TasksEditEntity): Promise<UpdateTaskResponse | void> => {
     this.isLoading = true;
+
 
     try {
       const externalTask = taskEditToExternal(task);
