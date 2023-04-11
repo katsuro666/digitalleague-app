@@ -1,10 +1,9 @@
-/* eslint-disable no-console */
 import React, { ChangeEvent, MouseEvent } from 'react';
 import { observer } from 'mobx-react';
 import { useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Checkbox, FormControlLabel, TextField } from '@mui/material';
+import { Snackbar, Checkbox, FormControlLabel, TextField, Alert } from '@mui/material';
 import { TasksAddStoreInstance } from './store';
 import { DEFAULT_VALUES } from './TasksAdd.utils';
 import { validationScheme } from './TasksAdd.validation';
@@ -15,7 +14,7 @@ import { TaskButton, StyledForm } from 'components/mui';
 function TasksAddProto() {
   const navigate = useNavigate();
 
-  const { addNewTask } = TasksAddStoreInstance;
+  const { addNewTask, isAddSuccessful, isAddFailed, setAddFailed, setAddSuccessful } = TasksAddStoreInstance;
 
   const { control, handleSubmit, reset, setValue } = useForm<TasksAddEntity>({
     defaultValues: DEFAULT_VALUES,
@@ -38,10 +37,15 @@ function TasksAddProto() {
     handleSubmit(async (data) => {
       const isSuccess = await addNewTask(data);
       if (isSuccess) {
-        reset();
-        navigate(PATH_LIST.ROOT);
+        setAddFailed(false);
+        setAddSuccessful(true);
+        setTimeout(() => {
+          setAddSuccessful(false);
+          reset();
+          navigate(PATH_LIST.ROOT);
+        }, 1000);
       } else {
-        console.log('Здесь должна быть нотификация о неудачном запросе');
+        setAddFailed(true);
       }
     })();
   };
@@ -109,6 +113,14 @@ function TasksAddProto() {
       <TaskButton type="submit" onClick={onSubmit}>
         Add task
       </TaskButton>
+
+      <Snackbar open={isAddSuccessful} autoHideDuration={3000}>
+        <Alert severity="success">Задание успешно добавлено.</Alert>
+      </Snackbar>
+
+      <Snackbar open={isAddFailed} autoHideDuration={3000}>
+        <Alert severity="error">При добавлении задания произошла ошибка.</Alert>
+      </Snackbar>
     </StyledForm>
   );
 }

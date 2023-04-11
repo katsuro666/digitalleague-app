@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Box, Typography } from '@mui/material';
+import { Container, Box } from '@mui/material';
 import StarsIcon from '@mui/icons-material/Stars';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import { TaskProps } from './Task.types';
 import './Task.css';
-import { LineThroughText, ImportantText, BtnTrue, BtnFalse } from './Task.styles';
+import { LineThroughText, ImportantText, BasicText, BtnTrue, BtnFalse } from './Task.styles';
 import { EDIT, ROOT } from 'constants/index';
 
 export function Task({ task, changeTaskComplete, changeTaskImportance, deleteTask }: TaskProps) {
@@ -25,7 +25,7 @@ export function Task({ task, changeTaskComplete, changeTaskImportance, deleteTas
         ) : isImportant ? (
           <ImportantText>{name}</ImportantText>
         ) : (
-          <Typography m="16px 0">{name}</Typography>
+          <BasicText>{name}</BasicText>
         )}
         <Box display="flex" justifyContent="space-between" minWidth="140px">
           {isImportant ? (
@@ -65,7 +65,7 @@ export function Task({ task, changeTaskComplete, changeTaskImportance, deleteTas
       ) : isImportant ? (
         <ImportantText>{info}</ImportantText>
       ) : (
-        <Typography m="16px 0">{info}</Typography>
+        <BasicText>{info}</BasicText>
       )}
     </Container>
   );
