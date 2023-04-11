@@ -8,10 +8,9 @@ import { Checkbox, FormControlLabel, TextField } from '@mui/material';
 import { TasksAddStoreInstance } from './store';
 import { DEFAULT_VALUES } from './TasksAdd.utils';
 import { validationScheme } from './TasksAdd.validation';
-import { StyledAddForm } from './TasksAdd.styles';
 import { PATH_LIST } from 'constants/index';
 import { TasksAddEntity } from 'domains/index';
-import { TaskButton } from 'components/mui';
+import { TaskButton, StyledForm } from 'components/mui';
 
 function TasksAddProto() {
   const navigate = useNavigate();
@@ -48,7 +47,7 @@ function TasksAddProto() {
   };
 
   return (
-    <StyledAddForm>
+    <StyledForm spacing={3}>
       <Controller
         control={control}
         name="name"
@@ -56,7 +55,6 @@ function TasksAddProto() {
           return (
             <TextField
               required
-              id="outlined-required"
               label="Task name"
               placeholder="Clean room"
               value={field.value}
@@ -74,16 +72,11 @@ function TasksAddProto() {
           return (
             <TextField
               required
-              id="outlined-required"
               label="Task description"
               placeholder="Clean my room"
               value={field.value}
               onChange={setTaskDesc}
               helperText={error?.message}
-              style={{
-                backgroundColor: 'rgb(72, 202, 228',
-                margin: '10px 0',
-              }}
             />
           );
         }}
@@ -100,7 +93,6 @@ function TasksAddProto() {
                   onChange={setTaskImportance}
                   style={{
                     color: 'rgb(72, 202, 228',
-                    margin: '10px 0 20px',
                   }}
                 />
               }
@@ -117,7 +109,7 @@ function TasksAddProto() {
       <TaskButton type="submit" onClick={onSubmit}>
         Add task
       </TaskButton>
-    </StyledAddForm>
+    </StyledForm>
   );
 }
 
