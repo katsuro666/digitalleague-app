@@ -1,35 +1,42 @@
 import React from 'react';
 import { observer } from 'mobx-react';
+import { Box, Typography, List, CircularProgress } from '@mui/material';
 import { Task } from '../Task';
+import { StyledListItem } from './TasksList.styles';
 import { TasksStoreInstance } from 'modules/Tasks/store';
-import { Loader } from 'components/Loader';
 import './TasksList.css';
 
 function TasksListProto() {
   const { tasks, isTasksLoading, changeTaskImportance, changeTaskComplete, deleteTask } = TasksStoreInstance;
 
   return (
-    <div className="tasks-wrapper d-flex align-items-center justify-content-center">
-      <Loader isLoading={isTasksLoading}>
-        {tasks?.length ? (
-          <ul className="list-group todo-list mb-3">
-            {tasks.map((task) => (
-              <li key={task.id} className="list-group-item">
-                <Task
-                  key={task.id}
-                  task={task}
-                  changeTaskImportance={changeTaskImportance}
-                  deleteTask={deleteTask}
-                  changeTaskComplete={changeTaskComplete}
-                />
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-center">Задач пока нет</p>
-        )}
-      </Loader>
-    </div>
+    <Box display="flex" alignItems="center" justifyContent="center">
+      {isTasksLoading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          {tasks?.length ? (
+            <List>
+              {tasks.map((task) => (
+                <StyledListItem key={task.id}>
+                  <Task
+                    key={task.id}
+                    task={task}
+                    changeTaskImportance={changeTaskImportance}
+                    deleteTask={deleteTask}
+                    changeTaskComplete={changeTaskComplete}
+                  />
+                </StyledListItem>
+              ))}
+            </List>
+          ) : (
+            <Typography display="flex" justifyContent="center" color="primary" margin="50px auto">
+              Задач пока нет
+            </Typography>
+          )}
+        </>
+      )}
+    </Box>
   );
 }
 

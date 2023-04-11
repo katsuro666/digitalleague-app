@@ -1,11 +1,12 @@
 import React, { MouseEvent } from 'react';
 import { observer } from 'mobx-react';
 import { Controller, useForm } from 'react-hook-form';
+import { TextField } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
 import { DEFAULT_VALUES } from './SearchForm.utils';
+import { StyledSearchForm, SearchWrapper, FindButton, ResetButton } from './SearchForm.styles';
 import { StatusFilter } from 'modules/Tasks/components/StatusFilter';
-import { SearchInput } from 'components/index';
 import { FiltersType } from 'domains/index';
-import './SearchForm.css';
 import { TasksStoreInstance } from 'modules/Tasks/store';
 
 function SearchFormProto() {
@@ -21,6 +22,7 @@ function SearchFormProto() {
   const onSearchInputReset = () => {
     setValue('searchName', '');
   };
+
   const onFilterChange = (type: FiltersType) => {
     setValue('filter', type);
   };
@@ -33,21 +35,43 @@ function SearchFormProto() {
   };
 
   return (
-    <form className="search-form d-flex justify-content-between">
-      <Controller
-        control={control}
-        name="searchName"
-        render={({ field }) => {
-          return (
-            <SearchInput
-              value={field.value}
-              onChange={onSearchInputChange}
-              onReset={onSearchInputReset}
-              disabled={isTasksLoading}
-            />
-          );
-        }}
-      />
+    <StyledSearchForm>
+      <SearchWrapper>
+        <Controller
+          control={control}
+          name="searchName"
+          render={({ field }) => {
+            return (
+              <TextField
+                id="standard-basic"
+                placeholder="Clear room"
+                label="Search"
+                variant="standard"
+                fullWidth={true}
+                value={field.value}
+                color="primary"
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  onSearchInputChange(event.target.value);
+                }}
+                InputLabelProps={{
+                  style: {
+                    color: 'white',
+                  },
+                }}
+              />
+            );
+          }}
+        />
+
+        <ResetButton onClick={onSearchInputReset} disabled={isTasksLoading}>
+          <ClearIcon />
+        </ResetButton>
+
+        <FindButton type="submit" onClick={onSubmit} disabled={isTasksLoading}>
+          Find
+        </FindButton>
+      </SearchWrapper>
+
       <Controller
         control={control}
         name="filter"
@@ -55,11 +79,7 @@ function SearchFormProto() {
           return <StatusFilter tasksType={field.value} onChange={onFilterChange} disabled={isTasksLoading} />;
         }}
       />
-
-      <button type="submit" className="btn btn-primary" onClick={onSubmit} disabled={isTasksLoading}>
-        Find
-      </button>
-    </form>
+    </StyledSearchForm>
   );
 }
 

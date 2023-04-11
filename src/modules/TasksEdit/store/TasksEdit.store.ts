@@ -5,7 +5,7 @@ import { TasksEditAgentInstance } from 'http/agent/index';
 import { mapToInternalTask, taskEditToExternal } from 'helpers/mappers';
 import { UpdateTaskResponse } from 'http/index';
 
-type PrivateFields = '_isLoading' | '_task';
+type PrivateFields = '_isLoading' | '_task' | '_editSuccessful' | '_editFailed';
 
 export class TasksEditStore {
   constructor() {
@@ -13,13 +13,19 @@ export class TasksEditStore {
       _isLoading: observable,
       _task: observable,
       taskId: observable,
+      _editSuccessful: observable,
+      _editFailed: observable,
 
       isLoading: computed,
       task: computed,
+      isEditSuccessful: computed,
+      isEditFailed: computed,
 
       loadTask: action,
       editTask: action,
       setTaskId: action,
+      setEditSuccessful: action,
+      setEditFailed: action,
     });
 
     reaction(
@@ -32,16 +38,50 @@ export class TasksEditStore {
 
   private _task: TaskEntity | undefined = undefined;
 
+  get task() {
+    return this._task;
+  }
+
+  set task(task: TaskEntity | undefined) {
+    this._task = task;
+  }
+
   taskId: string | undefined = undefined;
+
+  setTaskId = (id: string | undefined) => {
+    this.taskId = id;
+  };
 
   get isLoading() {
     return this._isLoading;
   }
 
-  get task() {
-    return this._task;
+  set isLoading(status: boolean) {
+    this._isLoading = status;
   }
 
+  private _editSuccessful = false;
+
+  get isEditSuccessful() {
+    return this._editSuccessful;
+  }
+
+  setEditSuccessful = (status: boolean) => {
+    this._editSuccessful = status;
+  };
+
+  private _editFailed = false;
+
+  get isEditFailed() {
+    return this._editFailed;
+  }
+
+  setEditFailed = (status: boolean) => {
+    this._editFailed = status;
+  };
+
+  loadTask = async (taskId: TaskEntity['id'] | undefined) => {
+    this.isLoading = true;
   setTaskId = (id: string | undefined) => {
     this.taskId = id;
   };
@@ -54,25 +94,18 @@ export class TasksEditStore {
     try {
       const res = await TasksEditAgentInstance.getTask(taskId as string);
       const mappedRes = mapToInternalTask(res);
-      runInAction(() => {
-        this._task = mappedRes;
-      });
+      this.task = mappedRes;
     } catch (error) {
-      runInAction(() => {
-        this._task = undefined;
-      });
+      this.task = undefined;
       console.error(error);
     } finally {
-      runInAction(() => {
-        this._isLoading = false;
-      });
+      this.isLoading = false;
     }
   };
 
   editTask = async (task: TasksEditEntity): Promise<UpdateTaskResponse | void> => {
-    runInAction(() => {
-      this._isLoading = true;
-    });
+    this.isLoading = true;
+
 
     try {
       const externalTask = taskEditToExternal(task);
@@ -81,9 +114,7 @@ export class TasksEditStore {
     } catch (error) {
       console.error(error);
     } finally {
-      runInAction(() => {
-        this._isLoading = false;
-      });
+      this.isLoading = false;
     }
   };
 }

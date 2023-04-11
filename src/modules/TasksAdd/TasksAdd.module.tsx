@@ -1,20 +1,20 @@
-/* eslint-disable no-console */
 import React, { ChangeEvent, MouseEvent } from 'react';
 import { observer } from 'mobx-react';
 import { useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Snackbar, Checkbox, FormControlLabel, TextField, Alert } from '@mui/material';
 import { TasksAddStoreInstance } from './store';
 import { DEFAULT_VALUES } from './TasksAdd.utils';
 import { validationScheme } from './TasksAdd.validation';
-import { TextField, Checkbox } from 'components/index';
 import { PATH_LIST } from 'constants/index';
 import { TasksAddEntity } from 'domains/index';
+import { TaskButton, StyledForm } from 'components/mui';
 
 function TasksAddProto() {
   const navigate = useNavigate();
 
-  const { addNewTask } = TasksAddStoreInstance;
+  const { addNewTask, isAddSuccessful, isAddFailed, setAddFailed, setAddSuccessful } = TasksAddStoreInstance;
 
   const { control, handleSubmit, reset, setValue } = useForm<TasksAddEntity>({
     defaultValues: DEFAULT_VALUES,
@@ -37,28 +37,43 @@ function TasksAddProto() {
     handleSubmit(async (data) => {
       const isSuccess = await addNewTask(data);
       if (isSuccess) {
-        reset();
-        navigate(PATH_LIST.ROOT);
+        setAddFailed(false);
+        setAddSuccessful(true);
+        setTimeout(() => {
+          setAddSuccessful(false);
+          reset();
+          navigate(PATH_LIST.ROOT);
+        }, 1000);
       } else {
-        console.log('Здесь должна быть нотификация о неудачном запросе');
+        setAddFailed(true);
       }
     })();
   };
 
   return (
-    <form>
+    <StyledForm spacing={3}>
       <Controller
         control={control}
         name="name"
         render={({ field, fieldState: { error } }) => {
           return (
             <TextField
-              inputType="text"
+              required
               label="Task name"
               placeholder="Clean room"
               value={field.value}
               onChange={setTaskName}
-              errorText={error?.message}
+              helperText={error?.message}
+              InputLabelProps={{
+                style: {
+                  color: 'rgb(119, 122, 146)',
+                },
+              }}
+              FormHelperTextProps={{
+                style: {
+                  color: 'red',
+                },
+              }}
             />
           );
         }}
@@ -70,12 +85,22 @@ function TasksAddProto() {
         render={({ field, fieldState: { error } }) => {
           return (
             <TextField
-              inputType="text"
-              label="What to do (description)"
+              required
+              label="Task description"
               placeholder="Clean my room"
               value={field.value}
               onChange={setTaskDesc}
-              errorText={error?.message}
+              helperText={error?.message}
+              InputLabelProps={{
+                style: {
+                  color: 'rgb(119, 122, 146)',
+                },
+              }}
+              FormHelperTextProps={{
+                style: {
+                  color: 'red',
+                },
+              }}
             />
           );
         }}
@@ -85,14 +110,38 @@ function TasksAddProto() {
         control={control}
         name="isImportant"
         render={() => {
-          return <Checkbox label="Important" onChange={setTaskImportance} />;
+          return (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={setTaskImportance}
+                  style={{
+                    color: 'rgb(72, 202, 228',
+                  }}
+                />
+              }
+              label="Important"
+              style={{
+                color: 'rgb(119, 122, 146)',
+                width: 'min-content',
+              }}
+            />
+          );
         }}
       />
 
-      <button type="submit" className="btn btn-secondary d-block w-100" onClick={onSubmit}>
+      <TaskButton type="submit" onClick={onSubmit}>
         Add task
-      </button>
-    </form>
+      </TaskButton>
+
+      <Snackbar open={isAddSuccessful} autoHideDuration={3000}>
+        <Alert severity="success">Задание успешно добавлено.</Alert>
+      </Snackbar>
+
+      <Snackbar open={isAddFailed} autoHideDuration={3000}>
+        <Alert severity="error">При добавлении задания произошла ошибка.</Alert>
+      </Snackbar>
+    </StyledForm>
   );
 }
 

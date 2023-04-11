@@ -1,7 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Container, Box } from '@mui/material';
+import StarsIcon from '@mui/icons-material/Stars';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 import { TaskProps } from './Task.types';
 import './Task.css';
+import { LineThroughText, ImportantText, BasicText, BtnTrue, BtnFalse } from './Task.styles';
 import { EDIT, ROOT } from 'constants/index';
 
 export function Task({ task, changeTaskComplete, changeTaskImportance, deleteTask }: TaskProps) {
@@ -12,51 +18,55 @@ export function Task({ task, changeTaskComplete, changeTaskImportance, deleteTas
   const onBtnTaskDelete = () => deleteTask(id);
 
   return (
-    <div>
-      <div className="task mb-2">
-        <p
-          className={`task__label ${isDone ? 'text-decoration-line-through text-secondary' : ''} ${
-            isImportant ? 'text-success fw-bold' : ''
-          }`}>
-          {name}
-        </p>
+    <Container>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        {isDone ? (
+          <LineThroughText>{name}</LineThroughText>
+        ) : isImportant ? (
+          <ImportantText>{name}</ImportantText>
+        ) : (
+          <BasicText>{name}</BasicText>
+        )}
+        <Box display="flex" justifyContent="space-between" minWidth="140px">
+          {isImportant ? (
+            <BtnTrue disabled={isDone} onClick={onBtnTaskImportance}>
+              <StarsIcon />
+            </BtnTrue>
+          ) : (
+            <BtnFalse disabled={isDone} onClick={onBtnTaskImportance}>
+              <StarsIcon />
+            </BtnFalse>
+          )}
 
-        <div className="task__btns">
-          <button
-            type="button"
-            className={`task__btn btn ${
-              isImportant ? 'btn-success' : 'btn-outline-success'
-            } btn-sm float-right btn-important`}
-            disabled={isDone}
-            onClick={onBtnTaskImportance}>
-            <i className="fa fa-exclamation" />
-          </button>
+          {isDone ? (
+            <BtnTrue onClick={onBtnTaskComplete}>
+              <CheckCircleIcon />
+            </BtnTrue>
+          ) : (
+            <BtnFalse onClick={onBtnTaskComplete}>
+              <CheckCircleIcon />
+            </BtnFalse>
+          )}
 
-          <button
-            type="button"
-            className={`task__btn btn ${isDone ? 'btn-danger' : 'btn-outline-danger'} btn-sm float-right`}
-            onClick={onBtnTaskComplete}>
-            <i className="fa fa-check" />
-          </button>
+          <BtnFalse onClick={onBtnTaskDelete}>
+            <DeleteForeverIcon />
+          </BtnFalse>
 
-          <button
-            type="button"
-            className="task__btn btn btn-outline-danger btn-sm float-right btn-delete"
-            onClick={onBtnTaskDelete}>
-            <i className="fa fa-trash-o" />
-          </button>
-
-          <Link className="task__btn btn btn-outline-secondary btn-sm float-right" to={`${ROOT}${EDIT}/${id}`}>
-            <i className="fa fa-pencil" />
+          <Link to={`${ROOT}${EDIT}/${id}`}>
+            <BtnFalse>
+              <EditIcon />
+            </BtnFalse>
           </Link>
-        </div>
-      </div>
-      <p
-        className={`${isDone ? 'text-decoration-line-through text-secondary' : ''} ${
-          isImportant ? 'text-success fw-bold' : ''
-        }`}>
-        {info}
-      </p>
-    </div>
+        </Box>
+      </Box>
+
+      {isDone ? (
+        <LineThroughText>{info}</LineThroughText>
+      ) : isImportant ? (
+        <ImportantText>{info}</ImportantText>
+      ) : (
+        <BasicText>{info}</BasicText>
+      )}
+    </Container>
   );
 }

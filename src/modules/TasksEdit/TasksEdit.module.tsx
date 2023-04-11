@@ -1,14 +1,14 @@
-/* eslint-disable no-console */
 import React, { ChangeEvent, MouseEvent, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { CircularProgress, TextField, Checkbox, FormControlLabel, Alert, Snackbar } from '@mui/material';
 import { TasksEditStoreInstance } from './store';
 import { DEFAULT_VALUES } from './TasksEdit.utils';
 import { validationScheme } from './TasksEdit.validation';
 import { PATH_LIST } from 'constants/index';
-import { Loader, Checkbox, TextField } from 'components/index';
+import { StyledForm, TaskButton } from 'components/index';
 import { TasksEditEntity } from 'domains/index';
 
 function TasksEditProto() {
@@ -16,7 +16,8 @@ function TasksEditProto() {
 
   const navigate = useNavigate();
 
-  const { isLoading, task, editTask, setTaskId } = TasksEditStoreInstance;
+  const { isLoading, task, editTask, setTaskId, isEditSuccessful, isEditFailed, setEditFailed, setEditSuccessful } =
+    TasksEditStoreInstance;
 
   const { control, reset, handleSubmit, setValue, getValues, watch } = useForm<TasksEditEntity>({
     defaultValues: DEFAULT_VALUES,
@@ -59,68 +60,141 @@ function TasksEditProto() {
     handleSubmit(async (data) => {
       const isSuccess = await editTask(data);
       if (isSuccess) {
-        reset();
-        navigate(PATH_LIST.ROOT);
+        setEditFailed(false);
+        setEditSuccessful(true);
+        setTimeout(() => {
+          setEditSuccessful(false);
+          reset();
+          navigate(PATH_LIST.ROOT);
+        }, 1000);
       } else {
-        console.log('Нотификация ошибки при редактировании');
+        setEditFailed(true);
       }
     })();
   }
 
   return (
-    <>
-      <form>
-        <Loader isLoading={isLoading}>
+    <StyledForm spacing={3}>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <>
           <Controller
             control={control}
             name="name"
             render={({ field, fieldState: { error } }) => {
               return (
-                <TextField label="Task name" value={field.value} onChange={setTaskName} errorText={error?.message} />
+                <TextField
+                  required
+                  label="Task name"
+                  value={field.value}
+                  onChange={setTaskName}
+                  helperText={error?.message}
+                  InputLabelProps={{
+                    style: {
+                      color: 'rgb(119, 122, 146)',
+                    },
+                  }}
+                  FormHelperTextProps={{
+                    style: {
+                      color: 'red',
+                    },
+                  }}
+                />
               );
             }}
           />
+
           <Controller
             control={control}
             name="info"
             render={({ field, fieldState: { error } }) => {
               return (
                 <TextField
+                  required
                   label="What to do (description)"
                   value={field.value}
                   onChange={setTaskDesc}
-                  errorText={error?.message}
+                  helperText={error?.message}
+                  InputLabelProps={{
+                    style: {
+                      color: 'rgb(119, 122, 146)',
+                    },
+                  }}
+                  FormHelperTextProps={{
+                    style: {
+                      color: 'red',
+                    },
+                  }}
                 />
               );
             }}
           />
+
           <Controller
             control={control}
             name="isImportant"
             render={({ field: { value } }) => {
               return (
-                <Checkbox
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      onChange={setIsImportant}
+                      checked={value}
+                      disabled={isDisabledIsImportant}
+                      style={{
+                        color: 'rgb(72, 202, 228',
+                      }}
+                    />
+                  }
                   label="Important"
-                  disabled={isDisabledIsImportant}
-                  checked={value}
-                  onChange={setIsImportant}
+                  style={{
+                    color: 'rgb(119, 122, 146)',
+                    width: 'min-content',
+                  }}
                 />
               );
             }}
           />
+
           <Controller
             control={control}
             name="isDone"
             render={({ field: { value } }) => {
-              return <Checkbox label="Completed" checked={value} onChange={setIsDone} />;
+              return (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      onChange={setIsDone}
+                      checked={value}
+                      style={{
+                        color: 'rgb(72, 202, 228',
+                      }}
+                    />
+                  }
+                  label="Completed"
+                  style={{
+                    color: 'rgb(119, 122, 146)',
+                    width: 'min-content',
+                  }}
+                />
+              );
             }}
           />
-          <button type="submit" className="btn btn-secondary d-block w-100" onClick={onSubmit}>
+          <TaskButton type="submit" onClick={onSubmit}>
             Edit task
-          </button>
-        </Loader>
-      </form>
-    </>
+          </TaskButton>
+
+          <Snackbar open={isEditSuccessful} autoHideDuration={3000}>
+            <Alert severity="success">Задание успешно отредактировано.</Alert>
+          </Snackbar>
+
+          <Snackbar open={isEditFailed} autoHideDuration={3000}>
+            <Alert severity="error">При редактировании задания произошла ошибка.</Alert>
+          </Snackbar>
+        </>
+      )}
+    </StyledForm>
   );
 }
 
