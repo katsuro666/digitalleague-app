@@ -90,6 +90,16 @@ function TasksEditProto() {
                   value={field.value}
                   onChange={setTaskName}
                   helperText={error?.message}
+                  InputLabelProps={{
+                    style: {
+                      color: 'rgb(119, 122, 146)',
+                    },
+                  }}
+                  FormHelperTextProps={{
+                    style: {
+                      color: 'red',
+                    },
+                  }}
                 />
               );
             }}
@@ -106,6 +116,16 @@ function TasksEditProto() {
                   value={field.value}
                   onChange={setTaskDesc}
                   helperText={error?.message}
+                  InputLabelProps={{
+                    style: {
+                      color: 'rgb(119, 122, 146)',
+                    },
+                  }}
+                  FormHelperTextProps={{
+                    style: {
+                      color: 'red',
+                    },
+                  }}
                 />
               );
             }}

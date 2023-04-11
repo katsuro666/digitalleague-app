@@ -13,7 +13,8 @@ export const StyledForm = styled(Stack)({
   height: '100%',
   margin: '20px 0',
   input: {
-    color: 'white',
+    color: 'rgb(119, 122, 146)',
     backgroundColor: 'rgb(37, 39, 60)',
+    fontWeight: '700',
   },
 });

@@ -30,7 +30,7 @@ function TasksListProto() {
               ))}
             </List>
           ) : (
-            <Typography display="flex" justifyContent="center" color="primary">
+            <Typography display="flex" justifyContent="center" color="primary" margin="50px auto">
               Задач пока нет
             </Typography>
           )}

@@ -42,33 +42,6 @@ function SearchFormProto() {
           name="searchName"
           render={({ field }) => {
             return (
-              // <FormControl fullWidth={true} variant="outlined">
-              //   <InputLabel htmlFor="search">Search</InputLabel>
-              //   <OutlinedInput
-              //     id="search"
-              //     type="text"
-              //     value={field.value}
-              //     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              //       onSearchInputChange(event.target.value);
-              //     }}
-              //     placeholder="Clear room"
-              //     fullWidth={true}
-              //     endAdornment={
-              //       <InputAdornment position="end">
-              //         <IconButton
-              //           aria-label="reset search input"
-              //           onClick={onSearchInputReset}
-              //           // onMouseDown={handleMouseDownPassword}
-              //           edge="end">
-              //           <Tooltip title="Delete">
-              //             <ClearIcon />
-              //           </Tooltip>
-              //         </IconButton>
-              //       </InputAdornment>
-              //     }
-              //     label="Password"
-              //   />
-              // </FormControl>
               <TextField
                 id="standard-basic"
                 placeholder="Clear room"
@@ -77,11 +50,13 @@ function SearchFormProto() {
                 fullWidth={true}
                 value={field.value}
                 color="primary"
-                // InputProps={{
-                //   endAdornment: <ClearIcon />,
-                // }}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   onSearchInputChange(event.target.value);
+                }}
+                InputLabelProps={{
+                  style: {
+                    color: 'white',
+                  },
                 }}
               />
             );
