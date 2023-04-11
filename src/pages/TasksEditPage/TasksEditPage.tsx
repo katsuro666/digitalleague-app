@@ -7,7 +7,7 @@ export function TasksEditPage() {
   const { taskId } = useParams();
   return (
     <PageContainer>
-      <StyledHeading variant="h3">TODO LIST | EDIT TASK {taskId}</StyledHeading>
+      <StyledHeading variant="h5">TODO LIST | EDIT TASK {taskId}</StyledHeading>
       <TasksEdit />
     </PageContainer>
   );

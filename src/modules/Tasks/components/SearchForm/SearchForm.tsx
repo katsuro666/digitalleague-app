@@ -60,7 +60,7 @@ function SearchFormProto() {
             );
           }}
         />
-        <FindButton type="submit" className="btn btn-primary" onClick={onSubmit} disabled={isTasksLoading}>
+        <FindButton type="submit" onClick={onSubmit} disabled={isTasksLoading}>
           Find
         </FindButton>
       </SearchWrapper>

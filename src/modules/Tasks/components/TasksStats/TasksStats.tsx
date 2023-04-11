@@ -1,8 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, CircularProgress } from '@mui/material';
 import { StatsBadge, StatsText, StatsWrapper } from './TasksStats.styles';
-import { Loader } from 'components/index';
 import { TasksStoreInstance } from 'modules/Tasks/store';
 
 function TasksStatsProto() {
@@ -13,23 +12,17 @@ function TasksStatsProto() {
         <>
           <StatsWrapper>
             <StatsText variant="body1">Total:</StatsText>
-            <Loader isLoading={isTasksLoading} variant="dot">
-              <StatsBadge variant="body2">{tasksStats.total}</StatsBadge>
-            </Loader>
+            {isTasksLoading ? <CircularProgress /> : <StatsBadge variant="body2">{tasksStats.total}</StatsBadge>}
           </StatsWrapper>
 
           <StatsWrapper>
             <StatsText variant="body1">Important:</StatsText>
-            <Loader isLoading={isTasksLoading} variant="dot">
-              <StatsBadge variant="body2">{tasksStats.important}</StatsBadge>
-            </Loader>
+            {isTasksLoading ? <CircularProgress /> : <StatsBadge variant="body2">{tasksStats.important}</StatsBadge>}
           </StatsWrapper>
 
           <StatsWrapper>
             <StatsText variant="body1">Done:</StatsText>
-            <Loader isLoading={isTasksLoading} variant="dot">
-              <StatsBadge variant="body2">{tasksStats.done}</StatsBadge>
-            </Loader>
+            {isTasksLoading ? <CircularProgress /> : <StatsBadge variant="body2">{tasksStats.done}</StatsBadge>}
           </StatsWrapper>
         </>
       ) : (
