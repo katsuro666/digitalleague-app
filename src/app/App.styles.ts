@@ -1,6 +1,8 @@
-import { Container, styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 
-export const StyledContainer = styled(Container)({
+export const StyledContainer = styled(Box)({
   backgroundColor: 'rgb(22, 23, 34)',
-  width: '100%',
+  maxwidth: '600px',
+  margin: '0 auto',
+  minHeight: '100vh',
 });

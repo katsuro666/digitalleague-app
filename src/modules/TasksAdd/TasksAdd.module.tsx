@@ -4,12 +4,14 @@ import { observer } from 'mobx-react';
 import { useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Checkbox, FormControlLabel, TextField } from '@mui/material';
 import { TasksAddStoreInstance } from './store';
 import { DEFAULT_VALUES } from './TasksAdd.utils';
 import { validationScheme } from './TasksAdd.validation';
-import { TextField, Checkbox } from 'components/index';
+import { StyledAddForm } from './TasksAdd.styles';
 import { PATH_LIST } from 'constants/index';
 import { TasksAddEntity } from 'domains/index';
+import { TaskButton } from 'components/mui';
 
 function TasksAddProto() {
   const navigate = useNavigate();
@@ -46,19 +48,20 @@ function TasksAddProto() {
   };
 
   return (
-    <form>
+    <StyledAddForm>
       <Controller
         control={control}
         name="name"
         render={({ field, fieldState: { error } }) => {
           return (
             <TextField
-              inputType="text"
+              required
+              id="outlined-required"
               label="Task name"
               placeholder="Clean room"
               value={field.value}
               onChange={setTaskName}
-              errorText={error?.message}
+              helperText={error?.message}
             />
           );
         }}
@@ -70,12 +73,17 @@ function TasksAddProto() {
         render={({ field, fieldState: { error } }) => {
           return (
             <TextField
-              inputType="text"
-              label="What to do (description)"
+              required
+              id="outlined-required"
+              label="Task description"
               placeholder="Clean my room"
               value={field.value}
               onChange={setTaskDesc}
-              errorText={error?.message}
+              helperText={error?.message}
+              style={{
+                backgroundColor: 'rgb(72, 202, 228',
+                margin: '10px 0',
+              }}
             />
           );
         }}
@@ -85,14 +93,31 @@ function TasksAddProto() {
         control={control}
         name="isImportant"
         render={() => {
-          return <Checkbox label="Important" onChange={setTaskImportance} />;
+          return (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={setTaskImportance}
+                  style={{
+                    color: 'rgb(72, 202, 228',
+                    margin: '10px 0 20px',
+                  }}
+                />
+              }
+              label="Important"
+              style={{
+                color: 'rgb(119, 122, 146)',
+                width: 'min-content',
+              }}
+            />
+          );
         }}
       />
 
-      <button type="submit" className="btn btn-secondary d-block w-100" onClick={onSubmit}>
+      <TaskButton type="submit" onClick={onSubmit}>
         Add task
-      </button>
-    </form>
+      </TaskButton>
+    </StyledAddForm>
   );
 }
 
