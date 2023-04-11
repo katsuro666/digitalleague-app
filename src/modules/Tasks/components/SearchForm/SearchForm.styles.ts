@@ -27,3 +27,13 @@ export const FindButton = styled(Button)({
   color: 'rgb(72, 202, 228)',
   border: '1px solid rgb(37, 39, 60)',
 });
+
+export const ResetButton = styled(Button)({
+  minWidth: '32px',
+  height: '32px',
+  marginTop: '16px',
+  marginLeft: '16px',
+  backgroundColor: 'rgb(37, 39, 60)',
+  color: 'rgb(72, 202, 228)',
+  border: '1px solid rgb(37, 39, 60)',
+});

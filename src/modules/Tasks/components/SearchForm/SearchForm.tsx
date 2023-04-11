@@ -2,9 +2,9 @@ import React, { MouseEvent } from 'react';
 import { observer } from 'mobx-react';
 import { Controller, useForm } from 'react-hook-form';
 import { TextField } from '@mui/material';
-// import ClearIcon from '@mui/icons-material/Clear';
+import ClearIcon from '@mui/icons-material/Clear';
 import { DEFAULT_VALUES } from './SearchForm.utils';
-import { StyledSearchForm, SearchWrapper, FindButton } from './SearchForm.styles';
+import { StyledSearchForm, SearchWrapper, FindButton, ResetButton } from './SearchForm.styles';
 import { StatusFilter } from 'modules/Tasks/components/StatusFilter';
 import { FiltersType } from 'domains/index';
 import { TasksStoreInstance } from 'modules/Tasks/store';
@@ -19,9 +19,9 @@ function SearchFormProto() {
     setValue('searchName', value);
   };
 
-  // const onSearchInputReset = () => {
-  //   setValue('searchName', '');
-  // };
+  const onSearchInputReset = () => {
+    setValue('searchName', '');
+  };
 
   const onFilterChange = (type: FiltersType) => {
     setValue('filter', type);
@@ -42,6 +42,33 @@ function SearchFormProto() {
           name="searchName"
           render={({ field }) => {
             return (
+              // <FormControl fullWidth={true} variant="outlined">
+              //   <InputLabel htmlFor="search">Search</InputLabel>
+              //   <OutlinedInput
+              //     id="search"
+              //     type="text"
+              //     value={field.value}
+              //     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              //       onSearchInputChange(event.target.value);
+              //     }}
+              //     placeholder="Clear room"
+              //     fullWidth={true}
+              //     endAdornment={
+              //       <InputAdornment position="end">
+              //         <IconButton
+              //           aria-label="reset search input"
+              //           onClick={onSearchInputReset}
+              //           // onMouseDown={handleMouseDownPassword}
+              //           edge="end">
+              //           <Tooltip title="Delete">
+              //             <ClearIcon />
+              //           </Tooltip>
+              //         </IconButton>
+              //       </InputAdornment>
+              //     }
+              //     label="Password"
+              //   />
+              // </FormControl>
               <TextField
                 id="standard-basic"
                 placeholder="Clear room"
@@ -60,6 +87,11 @@ function SearchFormProto() {
             );
           }}
         />
+
+        <ResetButton onClick={onSearchInputReset} disabled={isTasksLoading}>
+          <ClearIcon />
+        </ResetButton>
+
         <FindButton type="submit" onClick={onSubmit} disabled={isTasksLoading}>
           Find
         </FindButton>
