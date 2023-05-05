@@ -1,6 +1,9 @@
 {
   "name": "todo-app",
   "version": "1.0.0",
+  "repository": {
+    "url": "git+https://github.com/{katsuro666}/{digitalleague-app}.git"
+  },
   "description": "",
   "main": "index.js",
   "settings": {
@@ -12,6 +15,7 @@
     "dev": "webpack serve --progress --config ./config/webpack.config.dev.js",
     "build": "webpack --mode=production --progress --config ./config/webpack.config.prod.js ",
     "watch": "webpack --progress=profile --config ./config/webpack.config.watch.js",
+    "deploy": "gh-pages -d dist",
     "lint:styles": "stylelint ./src/**/*.css",
     "fix:styles": "stylelint --fix ./src/**/*.css",
     "lint:ts": "eslint src/**/*.{ts,tsx}",
@@ -59,6 +63,7 @@
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-react": "7.28.0",
     "fork-ts-checker-webpack-plugin": "7.2.11",
+    "gh-pages": "^5.0.0",
     "html-webpack-plugin": "5.5.0",
     "husky": "8.0.1",
     "image-minimizer-webpack-plugin": "3.2.3",

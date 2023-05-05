@@ -26,7 +26,7 @@ function TasksStatsProto() {
           </StatsWrapper>
         </>
       ) : (
-        <Typography display="flex" justifyContent="center" margin="20px auto">
+        <Typography display="flex" justifyContent="center" margin="20px auto" color="primary">
           Статистика недоступна
         </Typography>
       )}
